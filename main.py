@@ -3,11 +3,7 @@
 Provides a minimal, pure update function used by the game loop or tests.
 """
 
-def update_game_state(secret_word: str,
-                                            guessed_letters: list[str],
-                                            guess: str,
-                                            lives: int) -> tuple[list[str], int]:
-        """
+"""
         Update guessed letters and remaining lives for a single guess.
 
         Behavior:
@@ -41,22 +37,6 @@ def update_game_state(secret_word: str,
         precompute a lowercase `secret = secret_word.lower()`, and optionally
         return a `correct: bool` alongside the current return values.
         """
-
-        g = guess.lower()
-
-        # Normalize existing guesses to lowercase for deterministic behavior
-        new_guessed = [s.lower() for s in guessed_letters]
-
-        if g in new_guessed:
-            return new_guessed, lives
-
-        new_guessed.append(g)
-
-        secret = secret_word.lower()
-        if g not in secret:
-            lives -= 1
-
-        return new_guessed, lives
 
 from logic import update_game_state, mask_word, is_game_over, is_word_guessed
 from ui import show_state, ask_for_guess
