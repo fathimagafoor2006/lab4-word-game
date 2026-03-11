@@ -3,17 +3,19 @@ def update_game_state(secret_word: str,
                       guess: str,
                       lives: int) -> tuple[list[str], int]:
     g = guess.lower()
-    new_guessed = guessed_letters.copy()
 
-    if g in new_guessed:
-        return new_guessed, lives
+    normalized = [letter.lower() for letter in guessed_letters]
 
-    new_guessed.append(g)
+    if g in normalized:
+        return normalized, lives
+
+    normalized.append(g)
 
     if g not in secret_word.lower():
         lives -= 1
 
-    return new_guessed, lives
+    return normalized, lives
+
 
 def mask_word(secret_word: str, guessed_letters: list[str]) -> str:
     if secret_word == "":
