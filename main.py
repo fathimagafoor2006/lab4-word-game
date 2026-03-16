@@ -42,6 +42,13 @@ from logic import update_game_state, mask_word, is_game_over, is_word_guessed
 from ui import show_state, ask_for_guess
 import random
 
+def choose_mode():
+    print("\nChoose a mode:")
+    print("1. Play manually")
+    print("2. Autoplay (computer guesses)")
+    choice = input("Enter 1 or 2: ").strip()
+    return choice
+
 WORDS = ["apple", "banana", "orange", "grapes", "peach"]
 
 def play_one_game():
@@ -65,12 +72,54 @@ def play_one_game():
     else:
         print(" You lost! The word was: {secret}")
 
-def main():
-    play_one_game()
+import string
+import random
 
-    replay = input("\nPlay again? (y/n): ").lower()
-    if replay == "y":
-        main()  
+def autoplay_one_game():
+    secret = random.choice(WORDS)
+    guessed = []
+    lives = 6
+
+    remaining_letters = list(string.ascii_lowercase)
+
+    print(f"\nAutoplay started! Secret word has {len(secret)} letters.")
+
+    while not is_game_over(lives, secret, guessed):
+        masked = mask_word(secret, guessed)
+        show_state(masked, guessed, lives)
+
+        guess = random.choice(remaining_letters)
+        remaining_letters.remove(guess)
+
+        print(f"Autoplayer guesses: {guess}")
+
+        guessed, lives = update_game_state(secret, guessed, guess, lives)
+
+    masked = mask_word(secret, guessed)
+    show_state(masked, guessed, lives)
+
+    if is_word_guessed(secret, guessed):
+        print("Autoplayer won!")
+    else:
+        print(f"Autoplayer lost! The word was: {secret}")
+
+
+def main():
+    while True:
+        choice = choose_mode()
+
+        if choice == "1":
+            play_one_game()
+        elif choice == "2":
+            autoplay_one_game()
+        else:
+            print("Invalid choice. Please enter 1 or 2.")
+            continue
+
+        replay = input("\nReturn to menu? (y/n): ").lower()
+        if replay != "y":
+            break
+
 
 if __name__ == "__main__":
     main()
